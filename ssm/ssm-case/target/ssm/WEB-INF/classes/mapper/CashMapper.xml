@@ -1,0 +1,83 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gs.dao.CashDAO">
+
+	<sql id="cash_query_common">
+		from t_user u, t_cash c, t_cash_type ct, t_pay_type pt
+		where u.id = c.user_id
+		and c.cash_type = ct.id
+		and c.pay_type = pt.id
+	</sql>
+
+	<sql id="cash_query_criteria">
+		<if test="query != null and query.money != null">
+			and c.money <![CDATA[<=]]> #{query.money}
+		</if>
+		<if test="query != null and query.customer != null and query.customer != ''">
+			and c.customer like concat('%', #{query.customer}, '%')
+		</if>
+		<if test="query != null and query.cashType != null">
+			and ct.id = #{query.cashType}
+		</if>
+		<if test="query != null and query.payType != null">
+			and pt.id = #{query.payType}
+		</if>
+		<if test="query != null and query.cashTime != null and query.cashTime != ''">
+			and c.cash_time <![CDATA[<=]]> #{query.cashTime}
+		</if>
+		<if test="query != null and query.createTime != null and query.createTime != ''">
+			and c.create_time <![CDATA[<=]]> #{query.createTime}
+		</if>
+	</sql>
+
+	<select id="listPagerCriteria" resultType="com.gs.vo.CashVO">
+		<![CDATA[
+			select c.id, c.money, c.customer, ct.pid as cashTypePid, ct.id as cashTypeId, ct.type as cashType,
+			pt.id as payTypeId, pt.type as payType, c.cash_time, c.create_time
+			]]>
+			<include refid="cash_query_common" />
+			<include refid="cash_query_criteria" />
+			limit #{pager.beginIndex}, #{pager.pageSize}
+
+	</select>
+
+	<select id="countCriteria" resultType="long" parameterType="com.gs.query.CashQuery">
+		select count(c.id)
+		<include refid="cash_query_common" />
+		<include refid="cash_query_criteria" />
+	</select>
+
+	<insert id="save" parameterType="cash">
+		<![CDATA[
+			insert into t_cash(money, customer, cash_type, cash_time, pay_type, user_id, create_time)
+			values(#{money}, #{customer}, #{cashType}, #{cashTime}, #{payType}, #{userId}, #{createTime})
+		]]>
+	</insert>
+
+	<update id="update" parameterType="cash">
+		<![CDATA[
+			update t_cash
+		]]>
+		<set>
+			<if test="money != null">
+				money = #{money},
+			</if>
+			<if test="customer != null and customer != ''">
+				customer = #{customer},
+			</if>
+			<if test="cashType != null">
+				cash_type = #{cashType},
+			</if>
+			<if test="cashTime != null">
+				cash_time = #{cashTime},
+			</if>
+			<if test="payType != null">
+				pay_type = #{payType},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	 
+</mapper>

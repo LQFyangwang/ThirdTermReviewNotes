@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="process-package" namespace="/process" extends="base-package">
+		<action name="*" class="processController" method="{1}">
+			<param name="allowedTypes">application/zip</param>
+			<result name="save" type="json">
+				<param name="root">statusVO</param>
+			</result>
+			<result name="listPage" type="json">
+				<param name="root">pagerDTO</param>
+			</result>
+			<result name="deploy" type="json">
+				<param name="root">statusVO</param>
+			</result>
+			<result name="remove" type="json">
+				<param name="root">statusVO</param>
+			</result>
+			<result name="listProcessDefinitions" type="json">
+				<param name="root">statusVO</param>
+			</result>
+			<result name="listProcessInstances" type="json">
+				<param name="root">statusVO</param>
+			</result>
+		</action>
+	</package>
+</struts>

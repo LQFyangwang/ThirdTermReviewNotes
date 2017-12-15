@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="admin-package" namespace="/admin" extends="base-package">
+		<action name="*" class="adminController" method="{1}">
+			<result name="loginPage">/WEB-INF/views/admin/login.jsp</result>
+			<result name="login" type="json">
+				<param name="root">statusVO</param>
+			</result>
+		</action>
+	</package>
+</struts>
